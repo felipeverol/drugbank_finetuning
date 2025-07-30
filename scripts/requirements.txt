@@ -1,0 +1,7 @@
+wandb
+huggingface_hub
+unsloth
+torch
+datasets
+trl
+transformers
