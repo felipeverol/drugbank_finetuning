@@ -2,7 +2,7 @@ import xml.etree.ElementTree as ET
 import json
 import random
 
-output_path = "/kaggle/working/metabolism_absorption.json"
+output_path = "/kaggle/working/metabolism_absorption_alpaca.json"
 metabolism_absorption_path = "/kaggle/input/metabolism-absorption-xml/metabolism_absorption.xml"
 negative_input_path = "/kaggle/input/negative-examples/negative_examples.txt"
 
