@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
 # ### Configurações do wandb e huggingface
 import os
 import wandb
@@ -10,10 +7,8 @@ from huggingface_hub import HfFolder
 os.environ["WANDB_API_KEY"] = ""
 os.environ["HF_TOKEN"] = ""
 
-# Login no WandB
+# Login no WandB e no Hugging Face
 wandb.login(key=os.getenv("WANDB_API_KEY"))
-
-# Login no Hugging Face
 HfFolder.save_token(os.getenv("HF_TOKEN"))
 
 print("✅ Logins realizados com sucesso!")
@@ -87,7 +82,7 @@ trainer = SFTTrainer(
         per_device_train_batch_size = 2,
         gradient_accumulation_steps = 4,
         warmup_steps = 50,
-        num_train_epochs = 2,
+        num_train_epochs = 1,
         learning_rate = 2e-4,
         logging_steps = 10,
         optim = "adamw_8bit",
@@ -105,8 +100,8 @@ trainer_stats = trainer.train()
 # ### Salvar modelo e tokenizer
 
 # Salva adapters
-model.push_to_hub("verolfelipe/Llama-Metabolism-Absorption-LoRA-3", token = "")
-tokenizer.push_to_hub("verolfelipe/Llama-Metabolism-Absorption-LoRA-3", token = "")
+model.push_to_hub("verolfelipe/Llama-Metabolism-Absorption-LoRA-4", token = "")
+tokenizer.push_to_hub("verolfelipe/Llama-Metabolism-Absorption-LoRA-4", token = "")
 
 # Salva mergeado (16 bits)
 model.push_to_hub_merged("verolfelipe/Llama-Metabolism-Absorption", tokenizer, save_method = "merged_16bit", token = "")
