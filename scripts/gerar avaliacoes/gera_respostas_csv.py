@@ -5,8 +5,8 @@ from unsloth import FastLanguageModel
 from tqdm import tqdm
 
 # ==== CONFIGURAÇÕES ====
-DATASET_PATH = "metabolism_absorption_alpaca_no_input.json"
-SAIDA_PATH = "avaliacao_500.csv"
+DATASET_PATH = "../../datasets/metabolism_absorption_alpaca.json"
+SAIDA_PATH = "../../avaliacao/avaliacao_500.csv"
 N_EXEMPLOS = 500
 
 alpaca_prompt = """Below is an instruction that describes a task. Write a response that appropriately completes the request.

@@ -33,7 +33,7 @@ def respostas_iguais(referencia, gerado):
     return int(safe_str(referencia).strip() == safe_str(gerado).strip())
 
 # Carrega CSV
-df = pd.read_csv("../avaliacao/avaliacao_500.csv")
+df = pd.read_csv("../../avaliacao/avaliacao_500.csv")
 
 # Aplica as métricas para o modelo base
 df["rougeL_base"] = df.progress_apply(lambda row: rouge_l_score(row["resposta_esperada"], row["resposta_modelo_base"]), axis=1)
@@ -46,7 +46,7 @@ df["bleu_ft"] = df.progress_apply(lambda row: bleu_score(row["resposta_esperada"
 df["equal_ft"] = df.progress_apply(lambda row: respostas_iguais(row["resposta_esperada"], row["resposta_modelo_treinado"]), axis=1)
 
 # Salva o CSV final
-df.to_csv("../avaliacao/avaliacao_500.csv", index=False)
+df.to_csv("../../avaliacao/avaliacao_500.csv", index=False)
 
 # Mostra médias no terminal
 print("\n=== MÉDIAS DAS MÉTRICAS ===")
