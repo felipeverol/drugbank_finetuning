@@ -46,7 +46,7 @@ df["bleu_ft"] = df.progress_apply(lambda row: bleu_score(row["resposta_esperada"
 df["equal_ft"] = df.progress_apply(lambda row: respostas_iguais(row["resposta_esperada"], row["resposta_modelo_treinado"]), axis=1)
 
 # Salva o CSV final
-df.to_csv("../avaliacao/resultados_com_metricas.csv", index=False)
+df.to_csv("../avaliacao/avaliacao_500.csv", index=False)
 
 # Mostra médias no terminal
 print("\n=== MÉDIAS DAS MÉTRICAS ===")
