@@ -65,7 +65,7 @@ def formatting_prompts_func(examples):
 pass
 
 from datasets import load_dataset
-dataset = load_dataset("verolfelipe/drug_bank_metabolism_absorption_alpaca_no_input", split = "train")
+dataset = load_dataset("verolfelipe/drug_bank_metabolism_absorption_alpaca", split = "train")
 dataset = dataset.map(formatting_prompts_func, batched = True,)
 
 # ### Configurações de treino
