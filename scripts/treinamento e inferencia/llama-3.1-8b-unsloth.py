@@ -1,19 +1,16 @@
-# ### Configurações do wandb e huggingface
+### Configurações de login no Hugging Face e Weights & Biases
+
 import os
 import wandb
 from huggingface_hub import HfFolder
 
-# Setar as variáveis de ambiente
 os.environ["WANDB_API_KEY"] = ""
 os.environ["HF_TOKEN"] = ""
 
-# Login no WandB e no Hugging Face
 wandb.login(key=os.getenv("WANDB_API_KEY"))
 HfFolder.save_token(os.getenv("HF_TOKEN"))
 
-print("✅ Logins realizados com sucesso!")
-
-# ### Instanciar modelo e tokenizer + configuração do PEFT model
+### Instanciar modelo e tokenizer + configuração do PEFT model
 
 from unsloth import FastLanguageModel
 
@@ -42,7 +39,7 @@ model = FastLanguageModel.get_peft_model(
     loftq_config = None, 
 )
 
-# ### Preparação do dataset
+### Preparação do dataset
 
 alpaca_prompt = """Below is an instruction that describes a task. Write a response that appropriately completes the request.
 
@@ -52,13 +49,12 @@ alpaca_prompt = """Below is an instruction that describes a task. Write a respon
 ### Response:
 {}"""
 
-EOS_TOKEN = tokenizer.eos_token # Must add EOS_TOKEN
+EOS_TOKEN = tokenizer.eos_token 
 def formatting_prompts_func(examples):
     instructions = examples["instruction"]
     outputs      = examples["output"]
     texts = []
     for instruction, output in zip(instructions, outputs):
-        # Must add EOS_TOKEN, otherwise your generation will go on forever!
         text = alpaca_prompt.format(instruction, output) + EOS_TOKEN
         texts.append(text)
     return { "text" : texts, }
@@ -68,7 +64,7 @@ from datasets import load_dataset
 dataset = load_dataset("verolfelipe/drug_bank_metabolism_absorption_alpaca", split = "train")
 dataset = dataset.map(formatting_prompts_func, batched = True,)
 
-# ### Configurações de treino
+### Configurações de treino
 
 from trl import SFTConfig, SFTTrainer
 trainer = SFTTrainer(
@@ -94,10 +90,11 @@ trainer = SFTTrainer(
     ),
 )
 
-# ### Treinar !!!
+### Treinamento
+
 trainer_stats = trainer.train()
 
-# ### Salvar modelo e tokenizer
+### Salvar adapters, modelo e tokenizer 
 
 # Salva adapters
 model.push_to_hub("verolfelipe/Llama-Metabolism-Absorption-LoRA-4", token = "")

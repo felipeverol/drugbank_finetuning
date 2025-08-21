@@ -2,8 +2,13 @@ import xml.etree.ElementTree as ET
 import json
 import random
 
+# Caminho do arquivo JSON de saída
 output_path = "/kaggle/working/metabolism_absorption_alpaca.json"
+
+# Caminho do arquivo XML de entrada (metabolismo e absorção)
 metabolism_absorption_path = "/kaggle/input/metabolism-absorption-xml/metabolism_absorption.xml"
+
+# Caminho do arquivo TXT de entrada (exemplos negativos)
 negative_input_path = "/kaggle/input/negative-examples/negative_examples.txt"
 
 tree = ET.parse(metabolism_absorption_path)
@@ -12,7 +17,10 @@ root = tree.getroot()
 print(f"Total de drogas: {len(root.findall('drug'))}")
 
 entrys = []
+
+# Abre o arquivo de saída para escrita
 with open(output_path, 'w', encoding='utf-8') as f:
+    # Processa cada droga no XML, extraindo metabolismo e absorção quando disponíveis
     for drug in root.findall('drug'):
         name = drug.find('name').text
         
@@ -20,6 +28,7 @@ with open(output_path, 'w', encoding='utf-8') as f:
             metabolism = drug.find('metabolism').text
             metabolism = metabolism.replace("\n", "")
             metabolism = " ".join(metabolism.split())
+            # Gerar variações de perguntas sobre metabolismo
             questions_meta = [
                 f"What is the metabolism of {name} like?",
                 f"How is {name} metabolized?",
@@ -31,6 +40,7 @@ with open(output_path, 'w', encoding='utf-8') as f:
                 f"How does the body process {name} metabolically?",
                 f"Tell me about {name}'s metabolism mechanism."
             ]
+            # Gerar 4 perguntas aleatórias sobre metabolismo
             for i in range(4):    
                 user_meta = random.choice(questions_meta)
                 questions_meta.remove(user_meta)
@@ -46,6 +56,7 @@ with open(output_path, 'w', encoding='utf-8') as f:
             absorption = drug.find('absorption').text
             absorption = absorption.replace("\n", "")
             absorption = " ".join(absorption.split())
+            # Gerar variações de perguntas sobre absorção
             questions_abs = [
                 f"What is the absorption of {name} like?",
                 f"How is {name} absorbed?",
@@ -57,6 +68,7 @@ with open(output_path, 'w', encoding='utf-8') as f:
                 f"How does the body absorb {name}?",
                 f"Tell me about {name}'s absorption mechanism."
             ]
+            # Gerar 4 perguntas aleatórias sobre absorção
             for i in range(4):
                 user_abs = random.choice(questions_abs)
                 questions_abs.remove(user_abs)
@@ -67,7 +79,9 @@ with open(output_path, 'w', encoding='utf-8') as f:
                 }
                 entrys.append(entry_abs)
 
+    # Processa exemplos negativos do arquivo TXT
     with open(negative_input_path, 'r', encoding='utf-8') as negative_ex:
+        # Lê cada linha do arquivo de exemplos negativos 
         for line in negative_ex:
             clean_line = line.strip()
             if clean_line:  
@@ -78,4 +92,7 @@ with open(output_path, 'w', encoding='utf-8') as f:
                 }
                 entrys.append(entry_negative)
     
+    # Escreve todas as entradas no arquivo JSON
     f.write(json.dumps(entrys, ensure_ascii=False))
+
+print(f"Dados salvo em: {output_path}")

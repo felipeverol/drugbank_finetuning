@@ -4,10 +4,13 @@ import random
 from unsloth import FastLanguageModel
 from tqdm import tqdm
 
-# ==== CONFIGURAÇÕES ====
-DATASET_PATH = "../../datasets/metabolism_absorption_alpaca.json"
-SAIDA_PATH = "../../avaliacao/avaliacao_500.csv"
-N_EXEMPLOS = 500
+### Configurações
+
+# Caminho do JSON de entrada 
+dataset_path = "../../datasets/metabolism_absorption_alpaca.json"
+
+# Caminho do arquivo CSV de saída
+output_path = "../../avaliacao/avaliacao_500.csv"
 
 alpaca_prompt = """Below is an instruction that describes a task. Write a response that appropriately completes the request.
 
@@ -17,22 +20,20 @@ alpaca_prompt = """Below is an instruction that describes a task. Write a respon
 ### Response:
 """
 
-# ==== CARREGAR DADOS ====
-with open(DATASET_PATH, "r", encoding="utf-8") as f:
+### Carrega dados
+with open(dataset_path, "r", encoding="utf-8") as f:
     dados = json.load(f)
 
 # Amostragem aleatória de 500 exemplos
-dados = random.sample(dados, min(N_EXEMPLOS, len(dados)))
+dados = random.sample(dados, 500)
 
-# ==== CARREGAR MODELOS ====
-
-print("Carregando modelos...")
+### Carrega modelos
 
 max_seq_length = 2048
 dtype = None
 load_in_4bit = True
 
-# Modelo com LoRA
+# Modelo ajustado com LoRA
 lora_model, tokenizer = FastLanguageModel.from_pretrained(
     model_name="verolfelipe/Llama-Metabolism-Absorption-LoRA-4",
     max_seq_length=max_seq_length,
@@ -50,7 +51,7 @@ base_model, _ = FastLanguageModel.from_pretrained(
 )
 FastLanguageModel.for_inference(base_model)
 
-# ==== GERAÇÃO ====
+### Função para gerar respostas
 
 def gerar_resposta(model, prompt):
     inputs = tokenizer([prompt], return_tensors="pt").to("cuda")
@@ -58,11 +59,9 @@ def gerar_resposta(model, prompt):
     decoded = tokenizer.decode(output[0], skip_special_tokens=True)
     return decoded.split("### Response:")[-1].strip()
 
-# ==== AVALIAÇÃO ====
+### Gera respostas
 
-print("Gerando respostas para 500 instruções...")
 resultados = []
-
 for exemplo in tqdm(dados):
     pergunta = exemplo["instruction"]
     resposta_esperada = exemplo.get("output", "")
@@ -79,7 +78,8 @@ for exemplo in tqdm(dados):
         "resposta_modelo_base": resposta_base
     })
 
-# ==== SALVAR RESULTADO ====
+### Salva resultados em CSV
+
 df_resultado = pd.DataFrame(resultados)
-df_resultado.to_csv(SAIDA_PATH, index=False)
-print(f"\nArquivo salvo em: {SAIDA_PATH}")
+df_resultado.to_csv(output_path, index=False)
+print(f"\nArquivo salvo em: {output_path}")
