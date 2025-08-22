@@ -61,7 +61,7 @@ drugbank_finetuning/
 - See [`requirements.txt`](scripts/requirements.txt) for all dependencies.
 
 
-**Author:** Felipe Rocha Verol 
-**Institution:** State University of Campinas (UNICAMP)  
-**Contact:** f248552@dac.unicamp.br
+**Author:** Felipe Rocha Verol\ 
+**Institution:** State University of Campinas (UNICAMP)\  
+**Contact:** f248552@dac.unicamp.br\
 **Year:** 2025
