@@ -1,7 +1,10 @@
-wandb
-huggingface_hub
+trl
 unsloth
 torch
+pandas
+tqdm
+nltk
+rouge-score
+wandb
+huggingface_hub
 datasets
-trl
-transformers
