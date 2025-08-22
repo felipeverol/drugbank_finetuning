@@ -1,4 +1,5 @@
 trl
+transformers
 unsloth
 torch
 pandas
