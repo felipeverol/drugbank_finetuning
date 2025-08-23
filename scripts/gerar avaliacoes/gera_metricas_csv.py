@@ -31,7 +31,7 @@ def bleu_score(referencia, gerado):
     smoothie = SmoothingFunction().method4
     return sentence_bleu(reference_tokens, generated_tokens, smoothing_function=smoothie)
 
-# EQUAL
+# Exact Match
 def respostas_iguais(referencia, gerado):
     return int(safe_str(referencia).strip() == safe_str(gerado).strip())
 
@@ -40,12 +40,12 @@ df = pd.read_csv(path)
 # Aplica as métricas para o modelo base
 df["rougeL_base"] = df.progress_apply(lambda row: rouge_l_score(row["resposta_esperada"], row["resposta_modelo_base"]), axis=1)
 df["bleu_base"] = df.progress_apply(lambda row: bleu_score(row["resposta_esperada"], row["resposta_modelo_base"]), axis=1)
-df["equal_base"] = df.progress_apply(lambda row: respostas_iguais(row["resposta_esperada"], row["resposta_modelo_base"]), axis=1)
+df["exact_base"] = df.progress_apply(lambda row: respostas_iguais(row["resposta_esperada"], row["resposta_modelo_base"]), axis=1)
 
 # Aplica as métricas para o modelo ajustado
 df["rougeL_ft"] = df.progress_apply(lambda row: rouge_l_score(row["resposta_esperada"], row["resposta_modelo_treinado"]), axis=1)
 df["bleu_ft"] = df.progress_apply(lambda row: bleu_score(row["resposta_esperada"], row["resposta_modelo_treinado"]), axis=1)
-df["equal_ft"] = df.progress_apply(lambda row: respostas_iguais(row["resposta_esperada"], row["resposta_modelo_treinado"]), axis=1)
+df["exact_ft"] = df.progress_apply(lambda row: respostas_iguais(row["resposta_esperada"], row["resposta_modelo_treinado"]), axis=1)
 
 df.to_csv(path, index=False)
 
@@ -54,9 +54,9 @@ print("\n=== MÉDIAS DAS MÉTRICAS ===")
 print("Modelo Base:")
 print(f"ROUGE-L: {df['rougeL_base'].mean():.4f}")
 print(f"BLEU:    {df['bleu_base'].mean():.4f}")
-print(f"EQUAL:   {df['equal_base'].mean():.4f}")
+print(f"Exact Match:   {df['exact_base'].mean():.4f}")
 
 print("\nModelo Fine-tuned:")
 print(f"ROUGE-L: {df['rougeL_ft'].mean():.4f}")
 print(f"BLEU:    {df['bleu_ft'].mean():.4f}")
-print(f"EQUAL:   {df['equal_ft'].mean():.4f}")
+print(f"Exact Match:   {df['exact_ft'].mean():.4f}")
